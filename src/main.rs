@@ -1,6 +1,6 @@
 extern crate tictactoe;
 
-use std::io;
+use std::{io, time::Duration};
 
 use rand::{thread_rng, Rng};
 
@@ -67,6 +67,10 @@ fn pve_game() {
                 let random_index =
                     (thread_rng().gen::<f64>() * choices.len() as f64).floor() as usize;
                 let choice = choices[random_index];
+
+                std::thread::sleep(Duration::new(1, 0));
+                println!("{}", choice + 1);
+                std::thread::sleep(Duration::new(1, 0));
 
                 match game.make_move(choice) {
                     Ok(_) => {}
