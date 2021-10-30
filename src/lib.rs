@@ -15,9 +15,9 @@ impl Game {
 
     pub fn make_move(&mut self, pos: usize) -> Result<char, &'static str> {
         if pos > 8 {
-            return Err("Not a valid position!")
+            return Err("Not a valid position!");
         } else if self.board[pos] != ' ' {
-            return Err("That place is taken!")
+            return Err("That place is taken!");
         }
 
         self.board[pos] = self.get_cur_player();
@@ -25,9 +25,17 @@ impl Game {
         Ok(self.get_cur_player())
     }
 
+    pub fn get_free_spaces(&self) -> Vec<usize> {
+        self.board
+            .iter()
+            .enumerate()
+            .filter_map(|(i, v)| if *v == ' ' { Some(i) } else { None })
+            .collect()
+    }
+
     pub fn check_filled(&self) -> bool {
         for cell in self.board.iter() {
-            if cell == &' '{
+            if cell == &' ' {
                 return false;
             }
         }
@@ -38,13 +46,13 @@ impl Game {
     pub fn check_win(&self) -> char {
         // Rows
         for ri in (0..9).step_by(3) {
-            let left  = self.board[ri];
-            let mid   = self.board[ri + 1];
+            let left = self.board[ri];
+            let mid = self.board[ri + 1];
             let right = self.board[ri + 2];
 
             if Game::check_line(left, mid, right) {
                 return left;
-            } 
+            }
         }
 
         // Columns
@@ -55,12 +63,12 @@ impl Game {
 
             if Game::check_line(top, mid, bot) {
                 return top;
-            } 
+            }
         }
 
         // Diagonals
         let tl = self.board[0];
-        let m  = self.board[4];
+        let m = self.board[4];
         let br = self.board[8];
 
         if Game::check_line(tl, m, br) {
@@ -80,13 +88,9 @@ impl Game {
     fn check_line(x: char, y: char, z: char) -> bool {
         x == y && x == z && x != ' '
     }
-    
+
     fn create_board() -> [char; 9] {
-        [
-            ' ', ' ', ' ',
-            ' ', ' ', ' ',
-            ' ', ' ', ' ',
-        ]
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     }
 
     fn next_turn(&mut self) {
@@ -104,15 +108,24 @@ impl Game {
 
     pub fn display_board(&self) {
         println!("     |     |     ");
-        println!("  {}  |  {}  |  {}  ", self.board[6], self.board[7], self.board[8]);
+        println!(
+            "  {}  |  {}  |  {}  ",
+            self.board[6], self.board[7], self.board[8]
+        );
         println!("    7|    8|    9");
         println!("-----+-----+-----");
         println!("     |     |     ");
-        println!("  {}  |  {}  |  {}  ", self.board[3], self.board[4], self.board[5]);
+        println!(
+            "  {}  |  {}  |  {}  ",
+            self.board[3], self.board[4], self.board[5]
+        );
         println!("    4|    5|    6");
         println!("-----+-----+-----");
         println!("     |     |     ");
-        println!("  {}  |  {}  |  {}  ", self.board[0], self.board[1], self.board[2]);
+        println!(
+            "  {}  |  {}  |  {}  ",
+            self.board[0], self.board[1], self.board[2]
+        );
         println!("    1|    2|    3");
     }
 }
